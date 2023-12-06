@@ -1,0 +1,30 @@
+import datetime
+import openpyxl
+
+# Ouvre la feuille de calcul Excel et lit les données des deux dernières lignes
+wb = openpyxl.load_workbook('data.xlsx')
+sheet = wb['Feuil1']
+last_row = sheet.max_row
+previous_row = last_row - 1
+date1 = sheet.cell(row=last_row, column=1).value
+date2 = sheet.cell(row=previous_row, column=1).value
+consumption_day1 = sheet.cell(row=last_row, column=2).value
+consumption_day2 = sheet.cell(row=previous_row, column=2).value
+consumption_night1 = sheet.cell(row=last_row, column=3).value
+consumption_night2 = sheet.cell(row=previous_row, column=3).value
+
+# Convertisse les dates en objets datetime pour pouvoir les comparer
+date1 = datetime.datetime.strptime(date1,'%d/%m/%Y')
+date2 = datetime.datetime.strptime(date2,'%d/%m/%Y')
+
+# Calcule la différence entre les deux dates en jours
+delta = date1 - date2
+delta_days = delta.days
+
+# Calcule la consommation en jour et en nuit
+consumption_day = (consumption_day1 - consumption_day2) / delta_days
+consumption_night = (consumption_night1 - consumption_night2) / delta_days
+
+# Affiche les résultats à l'utilisateur
+print(f'Consommation en jour: {consumption_day:.2f} kwh/jour')
+print(f'Consommation en nuit: {consumption_night:.2f} kwh/jour')
